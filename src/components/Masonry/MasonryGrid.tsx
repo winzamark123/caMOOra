@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { ImageProp } from '@/server/routers/Images';
 import { trpc } from '@/lib/trpc/client';
@@ -8,32 +8,84 @@ import Image from 'next/image';
 interface MasonryWrapperProps {
   images: ImageProp[];
   isEditing?: boolean;
+  userId: string;
+  photoAlbumId: string;
 }
 
-// The number of columns change by resizing the window
 export default function MasonryWrapper({
   images,
   isEditing = false,
+  userId,
+  photoAlbumId,
 }: MasonryWrapperProps) {
+  const [deletingImages, setDeletingImages] = useState<string[]>([]);
   const utils = trpc.useUtils();
+
   const deleteImage = trpc.images.deleteImage.useMutation({
-    onSuccess: () => {
-      utils.images.getImagesByAlbumId.invalidate();
+    onMutate: async (variables) => {
+      await utils.images.getImagesByAlbumId.cancel();
+
+      const previousImages = utils.images.getImagesByAlbumId.getData({
+        userId,
+        photoAlbumId,
+      });
+
+      utils.images.getImagesByAlbumId.setData(
+        { userId, photoAlbumId },
+        (old) => (old ? old.filter((img) => img.id !== variables.imageId) : [])
+      );
+
+      setDeletingImages((prev) => [...prev, variables.imageId]);
+
+      return { previousImages };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousImages) {
+        utils.images.getImagesByAlbumId.setData(
+          { userId, photoAlbumId },
+          context.previousImages
+        );
+      }
+      console.error('Error deleting image:', err);
+      setDeletingImages((prev) =>
+        prev.filter((id) => id !== variables.imageId)
+      );
+    },
+    onSuccess: async (_, variables) => {
+      setDeletingImages((prev) =>
+        prev.filter((id) => id !== variables.imageId)
+      );
+      await utils.images.getImagesByAlbumId.invalidate({
+        userId,
+        photoAlbumId,
+      });
     },
   });
 
   const handleDeleteImage = async (imageId: string) => {
-    await deleteImage.mutate({ imageId: imageId });
+    if (deletingImages.includes(imageId)) return; // Prevent multiple clicks
+    try {
+      await deleteImage.mutate({ imageId });
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
   };
+
+  // Filter out deleting images from display
+  const displayImages = images.filter(
+    (image) => !deletingImages.includes(image.id)
+  );
 
   return (
     <ResponsiveMasonry
       columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1240: 4 }}
     >
       <Masonry gutter="10px">
-        {images.map((image: ImageProp) => (
-          <div key={image.id} className="group relative">
-            {/* {loadingImages.includes(image.id) && <SkeletonCard />} */}
+        {displayImages.map((image: ImageProp) => (
+          <div
+            key={image.id}
+            className="group relative transition-opacity duration-300 ease-in-out"
+          >
             <Image
               className="rounded-sm"
               src={image.url}

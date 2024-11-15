@@ -365,7 +365,7 @@ export default function EditProjectSection({
               <input
                 ref={createInputRef}
                 id="add-photo-album-name"
-                className="rounded-full border-2 border-blue-700 bg-profile_button_bg text-center text-xs placeholder-slate-400"
+                className="h-9 w-32 rounded-full border-2 border-blue-700 bg-profile_button_bg text-center text-xs placeholder-slate-400"
                 type="text"
                 placeholder="Enter Album Name"
                 title="Please enter a name for you new photo album"
@@ -392,7 +392,7 @@ export default function EditProjectSection({
             </div>
           )}
           <Button
-            className="shrink-0 rounded-lg border border-gray-400 bg-profile_button_bg text-xs text-black hover:bg-primary_blue hover:text-white focus:bg-primary_blue  focus:text-white"
+            className="shrink-0 rounded-lg border border-gray-400 bg-profile_button_bg text-xs text-black hover:bg-primary_blue hover:text-white focus:bg-primary_blue  focus:text-white "
             aria-label="Create a New Photo Album"
             onClick={() => {
               setIsCreatingPhotoAlbum(true);

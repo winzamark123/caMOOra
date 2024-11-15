@@ -19,6 +19,7 @@ export default function PhotoAlbum({
     data: user_images,
     isLoading,
     error,
+    refetch,
   } = trpc.images.getImagesByAlbumId.useQuery({
     userId: userId,
     photoAlbumId: photoAlbumId,
@@ -57,11 +58,16 @@ export default function PhotoAlbum({
     >
       {isEditing && (
         <div className="h-half-screen overflow-y-auto border-b-2">
-          <CreatePostForm photoAlbumId={photoAlbumId} />
+          <CreatePostForm photoAlbumId={photoAlbumId} refetch={refetch} />
         </div>
       )}
       {user_images && (
-        <MasonryWrapper images={user_images} isEditing={isEditing} />
+        <MasonryWrapper
+          images={user_images}
+          isEditing={isEditing}
+          userId={userId}
+          photoAlbumId={photoAlbumId}
+        />
       )}
     </main>
   );
