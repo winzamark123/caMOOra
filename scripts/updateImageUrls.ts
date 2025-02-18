@@ -1,6 +1,6 @@
 // scripts/updateImageUrls.ts
 // import prisma from '@prisma/prisma';
-import prisma from '/Users/diegoo/Desktop/Programming/CaMooRaRepos/caMOOra/prisma/prisma';
+import prisma from '@prisma/prisma';
 
 const OLD_DOMAIN = 'https://fomoo-bucket-local.s3.us-east-2.amazonaws.com'; // old s3 bucket
 const NEW_DOMAIN = 'https://dmmuvefqy6r0i.cloudfront.net'; // production cdn
