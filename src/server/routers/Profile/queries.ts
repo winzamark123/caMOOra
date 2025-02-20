@@ -25,7 +25,7 @@ export const getProfileBasics = publicProcedure
         lastName: true,
         profilePic: {
           select: {
-            url: true,
+            originalUrl: true,
           },
         },
       },
@@ -76,7 +76,7 @@ export const getProfileCoverImage = publicProcedure
       select: {
         coverImage: {
           select: {
-            url: true,
+            originalUrl: true,
           },
         },
       },
@@ -95,7 +95,7 @@ export const getProfileCoverImage = publicProcedure
         },
       },
       select: {
-        url: true,
+        originalUrl: true,
       },
     });
 

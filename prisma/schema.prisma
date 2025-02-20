@@ -97,7 +97,10 @@ model Images {
 
   // Image Information
   key        String
-  url        String
+  // url        String
+  originalUrl String
+  webpUrl     String?
+  blurUrl     String?
   createdAt  DateTime  @default(now())
   Profile    Profile[]
   CoverImage Profile?  @relation("coverImage")

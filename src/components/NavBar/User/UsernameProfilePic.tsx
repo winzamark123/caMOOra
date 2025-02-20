@@ -32,9 +32,9 @@ export default function UsernameProfilePic({ id }: UsernameProfilePicProps) {
   return (
     <main className="flex items-center gap-2 font-bold">
       <div className="relative aspect-square h-11 w-11 rounded-full border">
-        {user_profile.profilePic?.url && (
+        {user_profile.profilePic?.originalUrl && (
           <Image
-            src={user_profile.profilePic?.url}
+            src={user_profile.profilePic?.originalUrl}
             alt="profile"
             fill
             className="rounded-full"

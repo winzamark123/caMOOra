@@ -2,10 +2,12 @@ import {
   S3Client,
   PutObjectCommand,
   ListBucketsCommand,
+  GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import crypto from 'crypto';
 import prisma from '@prisma/prisma';
+import sharp from 'sharp';
 
 interface GetSignedURLProps {
   file_type: string;
@@ -48,10 +50,9 @@ export async function getPresignedURL({
   }
 
   const generatedFileName = generateFileName();
-
   const putObjectCommand = new PutObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME as string,
-    Key: `${userId}/${generatedFileName}`,
+    Key: `${userId}/original/${generatedFileName}`,
     ContentType: file_type,
     ContentLength: size,
     ChecksumSHA256: checksum,
@@ -69,8 +70,10 @@ export async function getPresignedURL({
   try {
     const imageData: any = {
       userId: userId,
-      url: `${process.env.AWS_CLOUDFRONT_URL}/${userId}/${generatedFileName}`,
-      key: `${userId}/${generatedFileName}`,
+      originalUrl: `${process.env.AWS_CLOUDFRONT_URL}/${userId}/original/${generatedFileName}`,
+      webpUrl: `${process.env.AWS_CLOUDFRONT_URL}/${userId}/placeholder/${generatedFileName}.webp`,
+      blurUrl: `${process.env.AWS_CLOUDFRONT_URL}/${userId}/blur/${generatedFileName}.webp`,
+      key: `${userId}/original/${generatedFileName}`,
     };
 
     // If photoAlbumID is provided, add it to the imageData object (Profile Pic doesn't have photoAlbumId)
@@ -82,10 +85,98 @@ export async function getPresignedURL({
       data: imageData,
     });
     // console.log('images_result:', images_result);
-    return { success: { signed_url: signedURL, image_id: images_result.id } };
+    return {
+      success: {
+        signed_url: signedURL,
+        image_id: images_result.id,
+        file_name: generatedFileName,
+      },
+    };
   } catch (error) {
     console.error('Failed to create image record in database', error);
     return { error: 'Failed to create image record in database' };
+  }
+}
+
+interface ProcessedImages {
+  original: Buffer;
+  placeholder: Buffer;
+  blur: Buffer;
+}
+
+async function processImage(buffer: Buffer): Promise<ProcessedImages> {
+  // Create WebP version - optimized for web viewing
+  const placeholder = await sharp(buffer)
+    .webp({ quality: 80, effort: 4 })
+    .toBuffer();
+
+  // Create blur version for lazy loading
+  const blur = await sharp(buffer)
+    .blur(30)
+    .webp({ quality: 10, effort: 1 })
+    .toBuffer();
+
+  return {
+    original: buffer,
+    placeholder,
+    blur,
+  };
+}
+
+async function uploadToS3(
+  buffer: Buffer,
+  key: string,
+  contentType: string
+): Promise<string> {
+  const putObjectCommand = new PutObjectCommand({
+    Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+    Key: key,
+    Body: buffer,
+    ContentType: contentType,
+  });
+
+  await s3.send(putObjectCommand);
+  return `${process.env.AWS_CLOUDFRONT_URL}/${key}`;
+}
+
+// TODO: edit s3 bucket policy for production (only allow access to specific userId folders)
+// New function to handle post-upload processing
+export async function processUploadedImage(userId: string, fileName: string) {
+  try {
+    // Get the original image from S3
+    const getObjectCommand = new GetObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+      Key: `${userId}/original/${fileName}`,
+    });
+
+    const response = await s3.send(getObjectCommand);
+    const buffer = await response.Body?.transformToByteArray();
+
+    if (!buffer) {
+      throw new Error('Failed to get image buffer');
+    }
+
+    // Process the image
+    const processed = await processImage(Buffer.from(buffer));
+
+    // Upload processed versions
+    await Promise.all([
+      uploadToS3(
+        processed.placeholder,
+        `${userId}/placeholder/${fileName}.webp`,
+        'image/webp'
+      ),
+      uploadToS3(
+        processed.blur,
+        `${userId}/blur/${fileName}.webp`,
+        'image/webp'
+      ),
+    ]);
+
+    return true;
+  } catch (error) {
+    console.error('Failed to process uploaded image:', error);
+    return false;
   }
 }
 

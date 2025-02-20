@@ -7,6 +7,7 @@ export const createProcessFile = (
   onUploadComplete?: () => void
 ) => {
   const signedURL = trpc.images.uploadImage.useMutation();
+  const processImage = trpc.images.processUploadedImageProcedure.useMutation();
 
   return async (
     fieldName: string,
@@ -48,6 +49,7 @@ export const createProcessFile = (
         }
 
         const url = signedURLResult.success.signed_url;
+        const fileName = signedURLResult.success.file_name;
 
         // Upload the file to S3 using XMLHttpRequest
         const xhr = new XMLHttpRequest();
@@ -58,14 +60,24 @@ export const createProcessFile = (
           progress(e.lengthComputable, e.loaded, e.total);
         };
 
-        xhr.onload = () => {
+        xhr.onload = async () => {
           if (xhr.status === 200) {
-            load(actualFile.name); // Notify FilePond that the upload has completed
-            if (onUploadSuccess) {
-              onUploadSuccess(actualFile.name);
-            }
-            if (onUploadComplete) {
-              onUploadComplete();
+            try {
+              // Process the image after successful upload (create webp & blur version of the image)
+              await processImage.mutateAsync({
+                fileName: fileName,
+              });
+
+              load(actualFile.name);
+              if (onUploadSuccess) {
+                onUploadSuccess(actualFile.name);
+              }
+              if (onUploadComplete) {
+                onUploadComplete();
+              }
+            } catch (processError) {
+              console.error('Failed to process image:', processError);
+              error('Image upload succeeded but processing failed');
             }
           } else {
             error('Upload failed');

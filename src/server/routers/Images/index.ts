@@ -12,6 +12,7 @@ export const images_router = router({
   getImagesByAlbumId: queries.getImagesByAlbumId,
   getUserHomePageImage: queries.getUserHomePageImage,
   updateProfilePic: mutations.updateProfilePic,
+  processUploadedImageProcedure: mutations.processUploadedImageProcedure,
   uploadImage: mutations.uploadImage,
   deleteImage: mutations.deleteImage,
 });

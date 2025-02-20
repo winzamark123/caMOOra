@@ -11,7 +11,7 @@ export const getAllPhotoAlbums = publicProcedure
         id: true,
         photoAlbumName: true,
         Images: {
-          select: { id: true, url: true },
+          select: { id: true, originalUrl: true }, // TODO: add blurUrl and webpUrl
         },
       },
     });
