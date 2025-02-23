@@ -41,7 +41,7 @@ export default function MasonryWrapper({
                 <div className="relative">
                   <Image
                     className="rounded-sm transition-opacity duration-200"
-                    src={image.url}
+                    src={image.originalUrl}
                     alt="Album Image"
                     width={0}
                     height={0}

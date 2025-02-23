@@ -52,7 +52,9 @@ export const getImagesByAlbumId = publicProcedure
     });
 
     const imageDetails = images.map((image) => ({
-      url: image.originalUrl, // TODO: get webpUrl & blurUrl as well
+      originalUrl: image.originalUrl, // TODO: get webpUrl & blurUrl as well
+      blurUrl: image.blurUrl,
+      webpUrl: image.webpUrl,
       id: image.id,
     }));
     return imageDetails;

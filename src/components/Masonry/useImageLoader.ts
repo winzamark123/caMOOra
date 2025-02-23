@@ -32,7 +32,7 @@ export function useImageLoader(
     if (!isLoading && !isFetching && images) {
       images.forEach((image) => {
         const img = new Image();
-        img.src = image.url;
+        img.src = image.originalUrl; // TODO: use webp / blurUrl
 
         img.onload = () => {
           const dimensions: ImageDimensions = {

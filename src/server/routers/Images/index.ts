@@ -4,7 +4,9 @@ import * as mutations from './mutations';
 
 export interface ImageProp {
   id: string;
-  url: string;
+  originalUrl: string;
+  blurUrl: string | null;
+  webpUrl: string | null;
 }
 
 export const images_router = router({
