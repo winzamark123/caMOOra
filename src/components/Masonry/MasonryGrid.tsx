@@ -5,6 +5,7 @@ import { AlbumLongPhotoSkeleton } from '../Skeletons/AlbumSkeleton';
 import { useImageLoader } from './useImageLoader';
 import { useImageDeletion } from './useImageDeletion';
 import { useCoverImageSelector } from './useCoverImageSelector';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
 
 interface MasonryWrapperProps {
   images: ImageProp[];
@@ -21,7 +22,11 @@ export default function MasonryWrapper({
   isFetching,
   refetch,
 }: MasonryWrapperProps) {
-  const { isImageReady } = useImageLoader(images, isLoading, isFetching);
+  const { isImageReady, getImageUrl } = useImageLoader(
+    images,
+    isLoading,
+    isFetching
+  );
   const { handleDeleteImage, getVisibleImages } = useImageDeletion({ refetch });
   const { handleSelectCoverImage, coverImageId } = useCoverImageSelector({
     refetch,
@@ -38,22 +43,24 @@ export default function MasonryWrapper({
           <div key={image.id} className="group relative">
             {isImageReady(image.id) ? (
               <>
-                <div className="relative">
-                  <Image
-                    className="rounded-sm transition-opacity duration-200"
-                    src={image.originalUrl}
-                    alt="Album Image"
-                    width={0}
-                    height={0}
-                    sizes="(max-width: 750px) 100vw,
+                <PopupImage>
+                  <div className="relative">
+                    <Image
+                      className="rounded-sm transition-opacity duration-200"
+                      src={getImageUrl(image.id)}
+                      alt="Album Image"
+                      width={0}
+                      height={0}
+                      sizes="(max-width: 750px) 100vw,
                            (max-width: 900px) 50vw,
                            (max-width: 1240px) 33vw,
                            25vw"
-                    style={{ width: '100%', height: 'auto' }}
-                    priority={false}
-                    loading="lazy"
-                  />
-                </div>
+                      style={{ width: '100%', height: 'auto' }}
+                      priority={false}
+                      loading="lazy"
+                    />
+                  </div>
+                </PopupImage>
                 {isEditing && (
                   <div className="absolute inset-0 z-30 flex items-center justify-center">
                     <div
@@ -107,5 +114,18 @@ export default function MasonryWrapper({
         ))}
       </Masonry>
     </ResponsiveMasonry>
+  );
+}
+
+function PopupImage({ children }: { children: React.ReactNode }) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild className="cursor-pointer">
+        {children}
+      </DialogTrigger>
+      <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-auto object-contain">
+        <div className="relative h-full w-full">{children}</div>
+      </DialogContent>
+    </Dialog>
   );
 }

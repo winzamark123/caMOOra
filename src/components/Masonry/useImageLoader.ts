@@ -32,7 +32,13 @@ export function useImageLoader(
     if (!isLoading && !isFetching && images) {
       images.forEach((image) => {
         const img = new Image();
-        img.src = image.originalUrl; // TODO: use webp / blurUrl
+        img.src = image.webpUrl || image.originalUrl; // TODO: use webp / blurUrl
+
+        // Preload the original image in the background if webpUrl was used
+        if (image.webpUrl && image.webpUrl !== image.originalUrl) {
+          const originalImg = new Image();
+          originalImg.src = image.originalUrl;
+        }
 
         img.onload = () => {
           const dimensions: ImageDimensions = {
@@ -71,5 +77,16 @@ export function useImageLoader(
     isImageReady: (imageId: string) => imagesReady.has(imageId),
     getImageDimensions: (imageId: string) => imageDimensions[imageId],
     allImagesLoaded: imagesReady.size === images.length,
+
+    // Add a method to get the appropriate URL based on loading state
+    getImageUrl: (imageId: string) => {
+      const image = images.find((img) => img.id === imageId);
+      if (!image) return '';
+
+      // Use webpUrl for initial loading if available, otherwise fall back to original
+      return imagesReady.has(imageId)
+        ? image.originalUrl
+        : image.webpUrl || image.originalUrl;
+    },
   };
 }
