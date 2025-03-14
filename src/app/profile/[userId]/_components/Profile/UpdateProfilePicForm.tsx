@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc/client';
 import { computeSHA256 } from '@/server/routers/Images/utils';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { Button } from '../../../../../components/ui/button';
 
 interface UpdateProfilePicFormProps {
@@ -123,12 +123,18 @@ export default function UpdateProfilePicForm({
               </div>
             ) : profilePicUrl && !selectedImage ? (
               <div className="relative h-36 w-28 sm:h-40 sm:w-32 md:h-44 md:w-36 lg:h-48 lg:w-40 xl:h-52 xl:w-44">
-                <Image
+                {/* <Image
                   src={profilePicUrl}
                   layout="fill"
                   objectFit="cover"
                   alt="Profile Picture"
                   className="rounded-sm border border-gray-300"
+                /> */}
+                <img
+                  src={profilePicUrl}
+                  alt="Profile Picture"
+                  className="absolute inset-0 h-full w-full rounded-sm border border-gray-300 object-cover"
+                  loading="lazy"
                 />
                 <div
                   className="absolute inset-0 cursor-pointer bg-white opacity-0 outline-4 transition-opacity duration-300 hover:opacity-50 focus:opacity-50 focus:outline-black"
@@ -146,14 +152,21 @@ export default function UpdateProfilePicForm({
             ) : null}
             {selectedImage && !isImageCleared && (
               <div className="relative h-36 w-28 sm:h-40 sm:w-32 md:h-44 md:w-36 lg:h-48 lg:w-40 xl:h-52 xl:w-44">
-                <Image
+                <img
+                  src={selectedImage}
+                  alt="Attach media"
+                  className="absolute inset-0 h-full w-full rounded-sm border border-gray-300 object-cover"
+                  aria-label="Preview of the Profile Picture"
+                  loading="lazy"
+                />
+                {/* <Image
                   src={selectedImage}
                   layout="fill"
                   objectFit="cover"
                   alt="Attach media"
                   className="rounder-sm border border-gray-300"
                   aria-label="Preview of the Profile Picture"
-                />
+                /> */}
                 <div
                   className="absolute inset-0 cursor-pointer bg-white opacity-0 transition-opacity duration-300 hover:opacity-50 focus:opacity-50"
                   tabIndex={0}

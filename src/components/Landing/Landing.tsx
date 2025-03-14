@@ -1,4 +1,4 @@
-import Image from 'next/image';
+// import Image from 'next/image';
 import fomooLogo from '@public/fo-moo-logo.svg';
 
 export default function Landing() {
@@ -9,12 +9,18 @@ export default function Landing() {
         <h4>CAPTURE</h4>
       </div>
       <div className="flex items-center justify-end gap-12">
-        <Image
-          src={fomooLogo}
+        <img
+          src={fomooLogo.src}
           alt="logo landing page"
           width={100}
           height={100}
         />
+        {/* <Image
+          src={fomooLogo}
+          alt="logo landing page"
+          width={100}
+          height={100}
+        /> */}
         <h1>SERVICE</h1>
       </div>
       <div className="flex justify-end px-2">
