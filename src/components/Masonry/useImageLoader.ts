@@ -32,10 +32,16 @@ export function useImageLoader(
     if (!isLoading && !isFetching && images) {
       images.forEach((image) => {
         const img = new Image();
-        img.src = image.webpUrl || image.originalUrl; // TODO: use webp / blurUrl
+        img.src = image.blurUrl || image.originalUrl; // TODO: use webp / blurUrl
 
-        // Preload the original image in the background if webpUrl was used
-        if (image.webpUrl && image.webpUrl !== image.originalUrl) {
+        // preload for masonry
+        if (image.webpUrl) {
+          const webpImg = new Image();
+          webpImg.src = image.webpUrl;
+        }
+
+        // preload for dialog
+        if (image.originalUrl && image.originalUrl !== image.webpUrl) {
           const originalImg = new Image();
           originalImg.src = image.originalUrl;
         }
@@ -79,14 +85,19 @@ export function useImageLoader(
     allImagesLoaded: imagesReady.size === images.length,
 
     // Add a method to get the appropriate URL based on loading state
-    getImageUrl: (imageId: string) => {
+    getImageUrl: (imageId: string, isDialogView = false) => {
       const image = images.find((img) => img.id === imageId);
       if (!image) return '';
 
-      // Use webpUrl for initial loading if available, otherwise fall back to original
-      return imagesReady.has(imageId)
-        ? image.originalUrl
-        : image.webpUrl || image.originalUrl;
+      if (!imagesReady.has(imageId)) {
+        return image.blurUrl;
+      }
+
+      if (isDialogView) {
+        return image.originalUrl;
+      }
+
+      return image.webpUrl;
     },
   };
 }

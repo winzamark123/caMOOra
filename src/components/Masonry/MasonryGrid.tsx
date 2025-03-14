@@ -43,11 +43,11 @@ export default function MasonryWrapper({
           <div key={image.id} className="group relative">
             {isImageReady(image.id) ? (
               <>
-                <PopupImage>
+                <PopupImage imageId={image.id} getImageUrl={getImageUrl}>
                   <div className="relative">
                     <Image
                       className="rounded-sm transition-opacity duration-200"
-                      src={getImageUrl(image.id)}
+                      src={getImageUrl(image.id) || ''}
                       alt="Album Image"
                       width={0}
                       height={0}
@@ -117,14 +117,31 @@ export default function MasonryWrapper({
   );
 }
 
-function PopupImage({ children }: { children: React.ReactNode }) {
+interface PopupImageProps {
+  children: React.ReactNode;
+  imageId: string;
+  getImageUrl: (imageId: string, isDialogView?: boolean) => string | null;
+}
+
+function PopupImage({ children, imageId, getImageUrl }: PopupImageProps) {
   return (
     <Dialog>
       <DialogTrigger asChild className="cursor-pointer">
         {children}
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-auto object-contain">
-        <div className="relative h-full w-full">{children}</div>
+        <div className="relative h-full w-full">
+          <Image
+            className="rounded-sm"
+            src={getImageUrl(imageId, true) || ''}
+            alt="Album Image"
+            width={0}
+            height={0}
+            sizes="60vw"
+            style={{ width: '100%', height: 'auto' }}
+            priority={true}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
