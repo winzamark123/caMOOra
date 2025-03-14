@@ -1,6 +1,6 @@
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { ImageProp } from '@/server/routers/Images';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { AlbumLongPhotoSkeleton } from '../Skeletons/AlbumSkeleton';
 import { useImageLoader } from './useImageLoader';
 import { useImageDeletion } from './useImageDeletion';
@@ -39,18 +39,11 @@ export default function MasonryWrapper({
             {isImageReady(image.id) ? (
               <>
                 <div className="relative">
-                  <Image
+                  <img
                     className="rounded-sm transition-opacity duration-200"
                     src={image.url}
                     alt="Album Image"
-                    width={0}
-                    height={0}
-                    sizes="(max-width: 750px) 100vw,
-                           (max-width: 900px) 50vw,
-                           (max-width: 1240px) 33vw,
-                           25vw"
                     style={{ width: '100%', height: 'auto' }}
-                    priority={false}
                     loading="lazy"
                   />
                 </div>
