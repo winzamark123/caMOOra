@@ -29,7 +29,7 @@ function ProfileCardContent({ userId }: ProfileCardProps) {
     >
       {userImage && (
         <Image
-          src={userImage.url}
+          src={userImage.originalUrl}
           alt="profile"
           fill
           objectFit="cover"
@@ -42,7 +42,7 @@ function ProfileCardContent({ userId }: ProfileCardProps) {
       >
         <div className="relative h-8 w-8 overflow-hidden rounded-full">
           <Image
-            src={userProfile?.profilePic?.url || '/default-profile.jpg'}
+            src={userProfile?.profilePic?.originalUrl || '/default-profile.jpg'}
             alt="profile"
             fill
             className="object-cover"

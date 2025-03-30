@@ -85,16 +85,24 @@ export function useImageLoader(
     allImagesLoaded: imagesReady.size === images.length,
 
     // Add a method to get the appropriate URL based on loading state
-    getImageUrl: (imageId: string, isDialogView = false) => {
+    getImageUrl: ({
+      imageId,
+      isDialogView = false,
+    }: {
+      imageId: string;
+      isDialogView: boolean;
+    }) => {
       const image = images.find((img) => img.id === imageId);
       if (!image) return '';
 
-      if (!imagesReady.has(imageId)) {
-        return image.blurUrl;
-      }
+      console.log('🚀 ~ :99 ~ imagesReady:', imagesReady, isDialogView);
 
       if (isDialogView) {
         return image.originalUrl;
+      }
+
+      if (!imagesReady.has(imageId)) {
+        return image.blurUrl;
       }
 
       return image.webpUrl;

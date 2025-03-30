@@ -1,3 +1,5 @@
+'use client';
+
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { ImageProp } from '@/server/routers/Images';
 import Image from 'next/image';
@@ -6,6 +8,7 @@ import { useImageLoader } from './useImageLoader';
 import { useImageDeletion } from './useImageDeletion';
 import { useCoverImageSelector } from './useCoverImageSelector';
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 interface MasonryWrapperProps {
   images: ImageProp[];
@@ -22,11 +25,7 @@ export default function MasonryWrapper({
   isFetching,
   refetch,
 }: MasonryWrapperProps) {
-  const { isImageReady, getImageUrl } = useImageLoader(
-    images,
-    isLoading,
-    isFetching
-  );
+  const { isImageReady } = useImageLoader(images, isLoading, isFetching);
   const { handleDeleteImage, getVisibleImages } = useImageDeletion({ refetch });
   const { handleSelectCoverImage, coverImageId } = useCoverImageSelector({
     refetch,
@@ -41,13 +40,14 @@ export default function MasonryWrapper({
       <Masonry gutter="10px">
         {visibleImages.map((image: ImageProp) => (
           <div key={image.id} className="group relative">
-            {isImageReady(image.id) ? (
+            {image.id && isImageReady(image.id) ? (
               <>
-                <PopupImage imageId={image.id} getImageUrl={getImageUrl}>
-                  <div className="relative">
+                <Dialog>
+                  <DialogTitle></DialogTitle>
+                  <DialogTrigger asChild className="cursor-pointer">
                     <Image
                       className="rounded-sm transition-opacity duration-200"
-                      src={getImageUrl(image.id) || ''}
+                      src={image.originalUrl || ''}
                       alt="Album Image"
                       width={0}
                       height={0}
@@ -59,8 +59,23 @@ export default function MasonryWrapper({
                       priority={false}
                       loading="lazy"
                     />
-                  </div>
-                </PopupImage>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-auto object-contain">
+                    <div className="relative h-full w-full">
+                      <Image
+                        className="rounded-sm"
+                        src={image.originalUrl}
+                        alt="Album Image"
+                        width={0}
+                        height={0}
+                        sizes="60vw"
+                        style={{ width: '100%', height: 'auto' }}
+                        priority={true}
+                        unoptimized={true}
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
                 {isEditing && (
                   <div className="absolute inset-0 z-30 flex items-center justify-center">
                     <div
@@ -114,35 +129,5 @@ export default function MasonryWrapper({
         ))}
       </Masonry>
     </ResponsiveMasonry>
-  );
-}
-
-interface PopupImageProps {
-  children: React.ReactNode;
-  imageId: string;
-  getImageUrl: (imageId: string, isDialogView?: boolean) => string | null;
-}
-
-function PopupImage({ children, imageId, getImageUrl }: PopupImageProps) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild className="cursor-pointer">
-        {children}
-      </DialogTrigger>
-      <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-auto object-contain">
-        <div className="relative h-full w-full">
-          <Image
-            className="rounded-sm"
-            src={getImageUrl(imageId, true) || ''}
-            alt="Album Image"
-            width={0}
-            height={0}
-            sizes="60vw"
-            style={{ width: '100%', height: 'auto' }}
-            priority={true}
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 }
