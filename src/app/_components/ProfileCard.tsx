@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { PhotoSkeleton } from '@/components/Skeletons/SkeletonCard';
-import Image from 'next/image';
+// import Image from 'next/image';
 import useFetchProfileInfo from './useFetchProfileInfo';
 
 interface ProfileCardProps {
@@ -28,12 +28,11 @@ function ProfileCardContent({ userId }: ProfileCardProps) {
     justify-end overflow-hidden p-2 sm:rounded-2xl sm:border-slate-400"
     >
       {userImage && (
-        <Image
-          src={userImage.originalUrl}
+        <img
+          src={userImage.webpUrl || ''}
           alt="profile"
-          fill
-          objectFit="cover"
-          className="brightness-50 filter"
+          className="absolute inset-0 h-full w-full object-cover brightness-50 filter"
+          loading="lazy"
         />
       )}
       <div
@@ -41,11 +40,11 @@ function ProfileCardContent({ userId }: ProfileCardProps) {
       gap-2 rounded-2xl  bg-primary_blue p-2 text-white"
       >
         <div className="relative h-8 w-8 overflow-hidden rounded-full">
-          <Image
+          <img
             src={userProfile?.profilePic?.originalUrl || '/default-profile.jpg'}
             alt="profile"
-            fill
-            className="object-cover"
+            className="h-full w-full object-cover"
+            loading="lazy"
           />
         </div>
         <p>{userProfile?.firstName}</p>

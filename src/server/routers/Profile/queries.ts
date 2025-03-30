@@ -76,7 +76,8 @@ export const getProfileCoverImage = publicProcedure
       select: {
         coverImage: {
           select: {
-            originalUrl: true,
+            // originalUrl: true,
+            webpUrl: true,
           },
         },
       },
@@ -95,7 +96,8 @@ export const getProfileCoverImage = publicProcedure
         },
       },
       select: {
-        originalUrl: true,
+        // originalUrl: true,
+        webpUrl: true,
       },
     });
 

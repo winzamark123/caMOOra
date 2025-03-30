@@ -1,5 +1,5 @@
 'use client';
-import Image from 'next/image';
+// import Image from 'next/image';
 import React from 'react';
 import { trpc } from '@/lib/trpc/client';
 import { DropDownSkeleton } from '@/components/Skeletons/SkeletonCard';
@@ -33,11 +33,11 @@ export default function UsernameProfilePic({ id }: UsernameProfilePicProps) {
     <main className="flex items-center gap-2 font-bold">
       <div className="relative aspect-square h-11 w-11 rounded-full border">
         {user_profile.profilePic?.originalUrl && (
-          <Image
+          <img
             src={user_profile.profilePic?.originalUrl}
             alt="profile"
-            fill
-            className="rounded-full"
+            className="absolute inset-0 h-full w-full rounded-full object-cover"
+            loading="lazy"
           />
         )}
       </div>

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import SimpleModal from '../../ProfilePicPopUp';
 import UpdateProfilePicForm from '../../UpdateProfilePicForm';
 import { useState } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 interface EditProfilePicProps {
   profileUrl: string;
@@ -27,12 +27,18 @@ export default function EditProfilePic({
         />
       </SimpleModal>
       <div className="relative mt-2 h-36 w-28 sm:h-40 sm:w-32 md:h-44 md:w-36 lg:h-48 lg:w-40 xl:h-52 xl:w-44">
-        <Image
+        {/* <Image
           src={profileUrl ?? ''}
           alt={`Profile Picture`}
           objectFit="cover"
           layout="fill"
           className="rounded-sm border border-black"
+        /> */}
+        <img
+          src={profileUrl ?? ''}
+          alt="Profile Picture"
+          className="absolute inset-0 h-full w-full rounded-sm border border-black object-cover"
+          loading="lazy"
         />
       </div>
       <div className="mt-2 flex flex-col gap-2">

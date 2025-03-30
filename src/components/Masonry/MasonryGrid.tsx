@@ -2,7 +2,7 @@
 
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { ImageProp } from '@/server/routers/Images';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { AlbumLongPhotoSkeleton } from '../Skeletons/AlbumSkeleton';
 import { useImageLoader } from './useImageLoader';
 import { useImageDeletion } from './useImageDeletion';
@@ -45,33 +45,21 @@ export default function MasonryWrapper({
                 <Dialog>
                   <DialogTitle></DialogTitle>
                   <DialogTrigger asChild className="cursor-pointer">
-                    <Image
+                    <img
                       className="rounded-sm transition-opacity duration-200"
-                      src={image.originalUrl || ''}
+                      src={image.webpUrl || ''}
                       alt="Album Image"
-                      width={0}
-                      height={0}
-                      sizes="(max-width: 750px) 100vw,
-                           (max-width: 900px) 50vw,
-                           (max-width: 1240px) 33vw,
-                           25vw"
-                      style={{ width: '100%', height: 'auto' }}
-                      priority={false}
                       loading="lazy"
+                      style={{ width: '100%', height: 'auto' }}
                     />
                   </DialogTrigger>
                   <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-auto object-contain">
                     <div className="relative h-full w-full">
-                      <Image
+                      <img
                         className="rounded-sm"
                         src={image.originalUrl}
                         alt="Album Image"
-                        width={0}
-                        height={0}
-                        sizes="60vw"
                         style={{ width: '100%', height: 'auto' }}
-                        priority={true}
-                        unoptimized={true}
                       />
                     </div>
                   </DialogContent>

@@ -1,4 +1,4 @@
-import Image from 'next/image';
+// import Image from 'next/image';
 import { SignInButton } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -33,11 +33,16 @@ export default function SignInPopUp({ onToggle }: { onToggle: () => void }) {
           className="absolute bottom-0 z-10 flex w-11/12 items-end 
         justify-end xs:right-0 xs:w-3/4 md:w-2/3 lg:w-3/5"
         >
-          <Image
-            src={PopupSVG}
+          <img
+            src={PopupSVG.src}
             alt="caMOOra Pop Up"
             className="h-auto w-full object-contain"
           />
+          {/* <Image
+            src={PopupSVG}
+            alt="caMOOra Pop Up"
+            className="h-auto w-full object-contain"
+          /> */}
         </div>
       </div>
     </PopUp>

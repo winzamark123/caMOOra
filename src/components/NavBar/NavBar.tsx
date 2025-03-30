@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 // import SignInPopUp from '../Popups/SignIn/SignInPopUp';
 import LogoBlack from '@public/logo_black.svg';
 import LogoWhite from '@public/logo_white.svg';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { trpc } from '@/lib/trpc/client';
 import { ModeToggle } from '../Theme/mode-toggle';
 // import DemoPopUp from '../Popups/SignUp/DemoPopUp';
@@ -70,7 +70,19 @@ export default function NavBar() {
     <main className="h-30 flex w-full justify-between p-8">
       <div className="p-4">
         <Link href="/">
-          <Image
+          <img
+            className="h-auto w-auto dark:hidden"
+            src={LogoBlack.src}
+            alt="Camoora Logo"
+            loading="eager"
+          />
+          <img
+            className="hidden h-auto w-auto dark:block"
+            src={LogoWhite.src}
+            alt="Camoora Logo"
+            loading="eager"
+          />
+          {/* <Image
             className="dark:hidden"
             src={LogoBlack}
             alt="Camoora Logo"
@@ -81,7 +93,7 @@ export default function NavBar() {
             src={LogoWhite}
             alt="Camoora Logo"
             priority
-          />
+          /> */}
         </Link>
       </div>
 

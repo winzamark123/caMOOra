@@ -1,7 +1,7 @@
 import Video from 'next-video';
 import PopUp from '../PopUp';
 import DemoVideoMp4 from '@videos/PhotographerWelcomeDemo.mp4';
-import Image from 'next/image';
+// import Image from 'next/image';
 import Confetti from '@public/demo/Confetti.svg';
 
 export default function DemoPopUp({ onToggle }: { onToggle: () => void }) {
@@ -10,7 +10,13 @@ export default function DemoPopUp({ onToggle }: { onToggle: () => void }) {
       <div className="flex flex-col justify-between overflow-hidden rounded-2xl border md:flex-row">
         <div className="relative flex w-full flex-col justify-center gap-6 bg-sky-900 p-8 pt-16 text-white md:w-1/2 md:pt-32">
           <div className="absolute left-0 top-0 z-0 h-1/3 w-full">
-            <Image src={Confetti} alt="Confetti" fill />
+            {/* <Image src={Confetti} alt="Confetti" fill /> */}
+            <img
+              src={Confetti.src}
+              alt="Confetti"
+              className="absolute inset-0 h-full w-full object-cover"
+              loading="eager"
+            />
           </div>
           <h2 className="z-40 text-2xl font-bold lg:text-2xl">
             ARE YOU A PHOTOGRAPHER?
