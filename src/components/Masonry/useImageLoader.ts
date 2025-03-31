@@ -41,10 +41,10 @@ export function useImageLoader(
         }
 
         // preload for dialog
-        if (image.originalUrl && image.originalUrl !== image.webpUrl) {
-          const originalImg = new Image();
-          originalImg.src = image.originalUrl;
-        }
+        // if (image.originalUrl && image.originalUrl !== image.webpUrl) {
+        //   const originalImg = new Image();
+        //   originalImg.src = image.originalUrl;
+        // }
 
         img.onload = () => {
           const dimensions: ImageDimensions = {

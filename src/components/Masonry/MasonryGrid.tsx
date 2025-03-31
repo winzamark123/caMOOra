@@ -25,7 +25,11 @@ export default function MasonryWrapper({
   isFetching,
   refetch,
 }: MasonryWrapperProps) {
-  const { isImageReady } = useImageLoader(images, isLoading, isFetching);
+  const { isImageReady, getImageUrl } = useImageLoader(
+    images,
+    isLoading,
+    isFetching
+  );
   const { handleDeleteImage, getVisibleImages } = useImageDeletion({ refetch });
   const { handleSelectCoverImage, coverImageId } = useCoverImageSelector({
     refetch,
@@ -57,7 +61,12 @@ export default function MasonryWrapper({
                     <div className="relative h-full w-full">
                       <img
                         className="rounded-sm"
-                        src={image.originalUrl}
+                        src={
+                          getImageUrl({
+                            imageId: image.id,
+                            isDialogView: true,
+                          }) || ''
+                        }
                         alt="Album Image"
                         style={{ width: '100%', height: 'auto' }}
                       />
