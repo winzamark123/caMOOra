@@ -1,7 +1,7 @@
 import { protectedProcedure } from '@/lib/trpc/trpc';
 import { z } from 'zod';
 import prisma from '@prisma/prisma';
-import { getPresignedURL } from './s3-post';
+import { getPresignedURL, processUploadedImage } from './s3-post';
 import { deletePhotoCommand } from './s3-delete';
 
 export const updateProfilePic = protectedProcedure
@@ -64,6 +64,29 @@ export const uploadImage = protectedProcedure
     }
 
     return { success, error };
+  });
+
+export const processUploadedImageProcedure = protectedProcedure
+  .input(
+    z.object({
+      fileName: z.string(),
+    })
+  )
+  .mutation(async ({ input, ctx }) => {
+    if (!ctx.user) {
+      throw new Error('Unauthorized');
+    }
+
+    const isProcessedSuccessfully = await processUploadedImage(
+      ctx.user.id,
+      input.fileName
+    );
+
+    if (!isProcessedSuccessfully) {
+      throw new Error('Failed to process image');
+    }
+
+    return { success: true };
   });
 
 export const deleteImage = protectedProcedure

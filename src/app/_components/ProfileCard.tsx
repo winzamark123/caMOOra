@@ -28,15 +28,8 @@ function ProfileCardContent({ userId }: ProfileCardProps) {
     justify-end overflow-hidden p-2 sm:rounded-2xl sm:border-slate-400"
     >
       {userImage && (
-        // <Image
-        //   src={userImage.url}
-        //   alt="profile"
-        //   fill
-        //   objectFit="cover"
-        //   className="brightness-50 filter"
-        // />
         <img
-          src={userImage.url}
+          src={userImage.webpUrl || ''}
           alt="profile"
           className="absolute inset-0 h-full w-full object-cover brightness-50 filter"
           loading="lazy"
@@ -47,14 +40,8 @@ function ProfileCardContent({ userId }: ProfileCardProps) {
       gap-2 rounded-2xl  bg-primary_blue p-2 text-white"
       >
         <div className="relative h-8 w-8 overflow-hidden rounded-full">
-          {/* <Image
-            src={userProfile?.profilePic?.url || '/default-profile.jpg'}
-            alt="profile"
-            fill
-            className="object-cover"
-          /> */}
           <img
-            src={userProfile?.profilePic?.url || '/default-profile.jpg'}
+            src={userProfile?.profilePic?.originalUrl || '/default-profile.jpg'}
             alt="profile"
             className="h-full w-full object-cover"
             loading="lazy"

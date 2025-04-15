@@ -1,3 +1,5 @@
+'use client';
+
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import { ImageProp } from '@/server/routers/Images';
 // import Image from 'next/image';
@@ -5,6 +7,8 @@ import { AlbumLongPhotoSkeleton } from '../Skeletons/AlbumSkeleton';
 import { useImageLoader } from './useImageLoader';
 import { useImageDeletion } from './useImageDeletion';
 import { useCoverImageSelector } from './useCoverImageSelector';
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog';
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 interface MasonryWrapperProps {
   images: ImageProp[];
@@ -21,7 +25,11 @@ export default function MasonryWrapper({
   isFetching,
   refetch,
 }: MasonryWrapperProps) {
-  const { isImageReady } = useImageLoader(images, isLoading, isFetching);
+  const { isImageReady, getImageUrl } = useImageLoader(
+    images,
+    isLoading,
+    isFetching
+  );
   const { handleDeleteImage, getVisibleImages } = useImageDeletion({ refetch });
   const { handleSelectCoverImage, coverImageId } = useCoverImageSelector({
     refetch,
@@ -36,17 +44,35 @@ export default function MasonryWrapper({
       <Masonry gutter="10px">
         {visibleImages.map((image: ImageProp) => (
           <div key={image.id} className="group relative">
-            {isImageReady(image.id) ? (
+            {image.id && isImageReady(image.id) ? (
               <>
-                <div className="relative">
-                  <img
-                    className="rounded-sm transition-opacity duration-200"
-                    src={image.url}
-                    alt="Album Image"
-                    style={{ width: '100%', height: 'auto' }}
-                    loading="lazy"
-                  />
-                </div>
+                <Dialog>
+                  <DialogTitle></DialogTitle>
+                  <DialogTrigger asChild className="cursor-pointer">
+                    <img
+                      className="rounded-sm transition-opacity duration-200"
+                      src={image.webpUrl || ''}
+                      alt="Album Image"
+                      loading="lazy"
+                      style={{ width: '100%', height: 'auto' }}
+                    />
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[90vh] max-w-[60vw] overflow-auto object-contain">
+                    <div className="relative h-full w-full">
+                      <img
+                        className="rounded-sm"
+                        src={
+                          getImageUrl({
+                            imageId: image.id,
+                            isDialogView: true,
+                          }) || ''
+                        }
+                        alt="Album Image"
+                        style={{ width: '100%', height: 'auto' }}
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
                 {isEditing && (
                   <div className="absolute inset-0 z-30 flex items-center justify-center">
                     <div

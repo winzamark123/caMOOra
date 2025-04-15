@@ -13,7 +13,7 @@ async function migrateImageUrls() {
     const images = await prisma.images.findMany({
       select: {
         id: true,
-        url: true,
+        originalUrl: true,
       },
     });
 
@@ -21,13 +21,13 @@ async function migrateImageUrls() {
 
     // Update each image URL
     const updates = images.map((image) => {
-      const newUrl = image.url.replace(OLD_DOMAIN, NEW_DOMAIN);
+      const newUrl = image.originalUrl.replace(OLD_DOMAIN, NEW_DOMAIN);
       console.log(`ID: ${image.id}`);
-      console.log(`Old URL: ${image.url}\n`);
+      console.log(`Old URL: ${image.originalUrl}\n`);
 
       return prisma.images.update({
         where: { id: image.id },
-        data: { url: newUrl },
+        data: { originalUrl: newUrl },
       });
     });
 
@@ -39,7 +39,7 @@ async function migrateImageUrls() {
     // Log first few changes as sample
     results.forEach((img) => {
       console.log(`ID: ${img.id}`);
-      console.log(`New URL: ${img.url}\n`);
+      console.log(`New URL: ${img.originalUrl}\n`);
     });
   } catch (error) {
     console.error('Migration failed:', error);

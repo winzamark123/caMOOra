@@ -60,8 +60,8 @@ export default function Profile() {
             <div className="flex flex-col gap-6 md:flex-row md:gap-10">
               {/* Profile picture */}
               <div className="flex justify-center md:justify-start">
-                {profile?.profilePic?.url && (
-                  <ProfilePic imageURL={profile?.profilePic.url} />
+                {profile?.profilePic?.originalUrl && (
+                  <ProfilePic imageURL={profile?.profilePic.originalUrl} />
                 )}
               </div>
 

@@ -16,7 +16,7 @@ export const getAllImages = publicProcedure
     });
 
     const imageDetails = images.map((image) => ({
-      url: image.url,
+      url: image.originalUrl, // TODO: get webpUrl & blurUrl as well
       id: image.id,
     }));
     return imageDetails;
@@ -34,7 +34,7 @@ export const getUserHomePageImage = publicProcedure
         },
       },
       select: {
-        url: true,
+        originalUrl: true, // TODO: get webpUrl
       },
     });
 
@@ -52,7 +52,9 @@ export const getImagesByAlbumId = publicProcedure
     });
 
     const imageDetails = images.map((image) => ({
-      url: image.url,
+      originalUrl: image.originalUrl, // TODO: get webpUrl & blurUrl as well
+      blurUrl: image.blurUrl,
+      webpUrl: image.webpUrl,
       id: image.id,
     }));
     return imageDetails;

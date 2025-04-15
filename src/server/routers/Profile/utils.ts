@@ -17,11 +17,12 @@ export async function createProfile({
     //create profile pic
     const profilePicId = await prisma.images.create({
       data: {
-        userId,
-        url: userProfilePicURL,
+        userId: userId,
+        originalUrl: userProfilePicURL,
         key: `${userId}/profilePic`,
       },
     });
+
     //create profile
     await prisma.profile.create({
       data: {

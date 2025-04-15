@@ -62,7 +62,7 @@ export default function EditBio({ userId, setIsEditing }: EditBioProps) {
       </div>
       <div className="mx-auto sm:mx-0 sm:flex">
         <EditProfilePic
-          profileUrl={profile?.profilePic?.url ?? ''}
+          profileUrl={profile?.profilePic?.originalUrl ?? ''}
           profilePicId={profile?.profilePic?.id ?? ''}
         />
         <FormProvider {...form}>
