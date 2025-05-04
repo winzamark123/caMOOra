@@ -24,6 +24,6 @@
       "@videos/*": ["./videos/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "scripts/check-schema.mjs"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "scripts/check-schema.mjs", "scripts/processExistingImages.ts"],
   "exclude": ["node_modules"]
 }
