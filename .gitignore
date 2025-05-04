@@ -49,3 +49,7 @@ videos/*
 !videos/*.js
 !videos/*.ts
 public/_next-video
+
+#db backup
+camoora-backup
+processed-images
