@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Images" ADD COLUMN "originalUrl" TEXT NULL;
+ALTER TABLE "Images" ADD COLUMN "webpUrl" TEXT NULL;
+ALTER TABLE "Images" ADD COLUMN "blurUrl" TEXT NULL;
