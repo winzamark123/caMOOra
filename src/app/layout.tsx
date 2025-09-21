@@ -41,24 +41,24 @@ export default function RootLayout({
         <link rel="manifest" href="/favicon/site.webmanifest" />
       </head>
       <body className="flex min-h-screen flex-col">
-        <ClerkProvider>
-          <TRPCProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <NavBar />
-              <div className="flex flex-col items-center justify-center">
-                {children}
-              </div>
-              <Toaster />
-              <WelcomeDemoPopup />
-              <Footer />
-            </ThemeProvider>
-          </TRPCProvider>
-        </ClerkProvider>
+        {/* <ClerkProvider> --> Removed since website is no longer being maintained
+          <TRPCProvider> */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NavBar />
+          <div className="flex flex-col items-center justify-center">
+            {children}
+          </div>
+          {/* <Toaster />
+          <WelcomeDemoPopup /> */}
+          <Footer />
+        </ThemeProvider>
+        {/* </TRPCProvider> */}
+        {/* </ClerkProvider> */}
       </body>
     </html>
   );

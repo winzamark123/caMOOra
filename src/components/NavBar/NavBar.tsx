@@ -16,7 +16,7 @@ import SignInPopUp from '../Popups/SignIn/SignInPopUp';
 export default function NavBar() {
   const [showSignInPopUp, setShowSignInPopUp] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { data: my_user } = trpc.profile.getMyProfile.useQuery();
+  // const { data: my_user } = trpc.profile.getMyProfile.useQuery();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleSignInPopUp = () => setShowSignInPopUp(!showSignInPopUp);
@@ -30,16 +30,16 @@ export default function NavBar() {
         Feedback
       </a>
       <ModeToggle />
-      <SignedIn>
+      {/* <SignedIn>
         {my_user && <DropDownProfile userId={my_user.userId} />}
-      </SignedIn>
-      <div className="flex">
+      </SignedIn> */}
+      {/* <div className="flex">
         <SignedOut>
           <Button className="px-6 py-3" onClick={toggleSignInPopUp}>
             Get Started
           </Button>
         </SignedOut>
-      </div>
+      </div> */}
     </>
   );
 
