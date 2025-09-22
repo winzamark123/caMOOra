@@ -1,7 +1,7 @@
 // import EditPhotoAlbum from './EditPhotoAlbum';
 import PhotoAlbum from '../PhotoAlbum/PhotoAlbum';
 import { trpc } from '@/lib/trpc/client';
-import { useEffect, useState, useRef } from 'react';
+import { useState } from 'react';
 import { SelectedPhotoAlbumProps } from '../Projects';
 import PhotoAlbumButton from '../PhotoAlbum/PhotoAlbumButton';
 import CreateAlbumModal from '../PhotoAlbum/Create/CreateAlbumModal';
@@ -27,25 +27,25 @@ export default function EditGallery({
   const defaultSelectedAlbum = { photoAlbumId: '', photoAlbumIndex: 0 };
   const [selectedPhotoAlbum, setSelectedPhotoAlbum] =
     useState<SelectedPhotoAlbumProps>(defaultSelectedAlbum);
-  const hasSetSelectedAlbumRef = useRef(false);
+  // const hasSetSelectedAlbumRef = useRef(false);
 
   // When Photo Albums are loaded for the first time
-  useEffect(() => {
-    if (photoAlbums?.length === 0) {
-      resetSelectedAlbum();
-    } else if (!hasSetSelectedAlbumRef.current && photoAlbums) {
-      setSelectedPhotoAlbum({
-        photoAlbumId: photoAlbums[0].id,
-        photoAlbumIndex: 0,
-      });
-      hasSetSelectedAlbumRef.current = true;
-    }
-  }, [photoAlbums]);
+  // useEffect(() => {
+  //   if (photoAlbums?.length === 0) {
+  //     resetSelectedAlbum();
+  //   } else if (!hasSetSelectedAlbumRef.current && photoAlbums) {
+  //     setSelectedPhotoAlbum({
+  //       photoAlbumId: photoAlbums[0].id,
+  //       photoAlbumIndex: 0,
+  //     });
+  //     hasSetSelectedAlbumRef.current = true;
+  //   }
+  // }, [photoAlbums]);
 
-  const resetSelectedAlbum = () => {
-    hasSetSelectedAlbumRef.current = false;
-    setSelectedPhotoAlbum(defaultSelectedAlbum);
-  };
+  // const resetSelectedAlbum = () => {
+  //   hasSetSelectedAlbumRef.current = false;
+  //   setSelectedPhotoAlbum(defaultSelectedAlbum);
+  // };
 
   if (isLoadingSections) {
     return <div>Loading...</div>;
@@ -84,7 +84,7 @@ export default function EditGallery({
                   setSelectedPhotoAlbum={setSelectedPhotoAlbum}
                   userId={userId}
                   refetchPhotoAlbums={refetchPhotoAlbums}
-                  resetSelectedAlbum={resetSelectedAlbum}
+                  resetSelectedAlbum={() => console.log('resetSelectedAlbum')}
                 />
               ))}
           </div>

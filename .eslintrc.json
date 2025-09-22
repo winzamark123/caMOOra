@@ -17,6 +17,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "@next/next/no-img-element": "off",
     "prettier/prettier": [
         "error",
         {
